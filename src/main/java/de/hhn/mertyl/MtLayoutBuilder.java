@@ -2,6 +2,9 @@ package de.hhn.mertyl;
 
 import java.util.ArrayList;
 
+/**
+ * Builder for MtLayouts
+ */
 public class MtLayoutBuilder {
     private ArrayList<MtType> types;
     private ArrayList<Integer> arrayLengths;
@@ -13,7 +16,10 @@ public class MtLayoutBuilder {
         arrayTypes = new ArrayList<>();
     }
 
-    public MtLayoutBuilder addColumn(MtType type) {
+    /**
+     * add a new Element of any primitive type
+     */
+    public MtLayoutBuilder addLayoutElement(MtType type) {
         if (type == null)
             throw new NullPointerException("Type of column can't be null");
         if (type == MtType.STRING)
@@ -26,6 +32,11 @@ public class MtLayoutBuilder {
         return this;
     }
 
+    /**
+     * Adds an Array to the layout
+     * @param type the primitive type of the array
+     * @param size the size of the array
+     */
     public MtLayoutBuilder addArray(MtType type, int size) {
         if (type == null)
             throw new NullPointerException("Type of array can't be null");
@@ -39,6 +50,10 @@ public class MtLayoutBuilder {
         return this;
     }
 
+    /**
+     * Adds a null terminated String to the layout
+     * @param maxSize max size of the String
+     */
     public MtLayoutBuilder addString(int maxSize) {
         if (maxSize <= 0)
             throw new IllegalArgumentException("Size must be greater then 0. Got " + maxSize);
@@ -47,7 +62,13 @@ public class MtLayoutBuilder {
         return this;
     }
 
+    /**
+     * @returns the finished Layout
+     */
     public MtLayout build() {
-        return new MtLayout(types.toArray(MtType[]::new), arrayLengths.stream().mapToInt(i -> i).toArray(), arrayTypes.toArray(MtType[]::new));
+        return new MtLayout(
+                types.toArray(MtType[]::new),
+                arrayLengths.stream().mapToInt(i -> i).toArray(),
+                arrayTypes.toArray(MtType[]::new));
     }
 }
