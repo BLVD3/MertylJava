@@ -5,6 +5,9 @@ public class MtLayout {
     private final int[] arraySizes;
     private final MtType[] arrayTypes;
 
+    private int headerSize;
+    private int stride;
+
     public MtLayout(MtType[] types, int[] arraySizes, MtType[] arrayTypes) {
         if (!checkViability(types, arraySizes, arrayTypes))
             throw new IllegalArgumentException("arraySizes and/or arrayTypes length do not match the count " +
@@ -12,6 +15,34 @@ public class MtLayout {
         this.types = types.clone();
         this.arraySizes = arraySizes.clone();
         this.arrayTypes = arrayTypes.clone();
+        stride = calculateStride();
+        headerSize = calculateHeaderSize();
+    }
+
+    private int calculateHeaderSize() {
+        int size = 0;
+        for (MtType type : types) {
+            size += switch (type) {
+                case STRING -> 2;
+                case ARRAY -> 3;
+                default -> 1;
+            };
+        }
+        return size;
+    }
+
+    private int calculateStride() {
+        int stride = 0;
+        int sizeCount = 0;
+        int arrTypeCount = 0;
+        for (MtType type : types) {
+            stride += switch (type) {
+                case ARRAY -> arraySizes[sizeCount++] * arrayTypes[arrTypeCount++].getSize();
+                case STRING -> arraySizes[sizeCount++];
+                default -> type.getSize();
+            };
+        }
+        return stride;
     }
 
     private boolean checkViability(MtType[] types, int[] arraySizes, MtType[] arrayTypes) {

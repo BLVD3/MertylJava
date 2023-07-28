@@ -71,4 +71,13 @@ public class MtLayoutBuilder {
                 arrayLengths.stream().mapToInt(i -> i).toArray(),
                 arrayTypes.toArray(MtType[]::new));
     }
+
+    public static void main(String[] args) {
+        MtLayout layout = new MtLayoutBuilder()
+                .addLayoutElement(MtType.CHAR)
+                .addLayoutElement(MtType.U_INT)
+                .addArray(MtType.DOUBLE, 5)
+                .build();
+        System.out.println(layout);
+    }
 }

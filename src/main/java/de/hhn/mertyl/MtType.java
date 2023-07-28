@@ -105,4 +105,14 @@ public enum MtType {
             case ARRAY -> "array";
         };
     }
+    
+    public int getSize() {
+        return switch (this) {
+            case BOOL, CHAR, S_BYTE, U_BYTE -> 1;
+            case S_SHORT, U_SHORT -> 2;
+            case S_INT, U_INT, FLOAT -> 4;
+            case S_LONG, U_LONG, DOUBLE -> 8;
+            case STRING, ARRAY -> 0;
+        };
+    }
 }
